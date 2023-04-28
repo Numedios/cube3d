@@ -23,7 +23,6 @@ typedef struct map_p
 
 }			t_map_p;
 
-
 typedef struct sprite
 {
 	char    *north;
@@ -34,12 +33,20 @@ typedef struct sprite
 	char		*top;
 }			t_sprite;
 
+typedef struct player
+{
+	int	x;
+	int	y;
+	char dir;
+
+}			t_player;
 
 typedef struct s_game
 {
 	char **tab;
 	char **map;
 	t_sprite	sprite;
+	t_player	player;
 }		t_game;
 
 
@@ -54,7 +61,6 @@ char	*get_next_line(int fd);
 int			check_end(char	*line);
 char		*ft_strjoin_gnl(char *line, char *buf);
 void		get_line(char *line, char *buf);
-int			ft_strlen(char *str);
 
 /* parsing_arg.c*/
 void		ft_strstrend(char *str, char *search);
@@ -98,7 +104,35 @@ int			ft_compstr(char *line, char *cmp);
 int			check_dir(char *line, char *dir);
 
 
-int			main(int argc, char **argv);
+/* create_map.c */
 
+void	create_map(t_game *game, t_map_p map_p);
+
+/* create_map-utils.c */
+
+void		set_map_p(t_map_p *map);
+int			start_line_map(t_game *game);
+int			start_height_map(t_game *game, t_map_p	map_p);
+void		check_map_block(t_game *game, t_map_p	map_p);
+int			start_width_map(t_game *game, t_map_p map_p);
+
+/* parsing_map_utils.c*/
+
+void		check_char_map(t_game *game);
+void		check_wall_line(t_game *game);
+void		check_adjacent(int row, int col, t_game *game);
+void		check_wall_map(t_game *game);
+
+/* create_player */
+
+void instance_player(t_game *game, int x, int y);
+void check_player_start(t_game *game, t_player p);
+
+/* libft.c */
+
+int			check_sep(char c, char *sep);
+int			ft_strlen(char *str);
+
+int			main(int argc, char **argv);
 
 #endif

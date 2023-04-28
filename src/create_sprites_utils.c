@@ -74,7 +74,7 @@ int	check_dir(char *line, char *dir)
 	{
 		while (line && line[i] && line[i] == ' ')
 			i++;
-		if (ft_compstr(line + i, dir))
+		if (line && line[i] && line[i] != '\r' && line[i] != '\n'&& ft_compstr(line + i, dir))
 			return (1);
 		break;	
 	}

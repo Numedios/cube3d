@@ -67,6 +67,7 @@ int set_sprite_value(char *tab, char **sprite, char *dir, t_game *game)
         }
         else
         {
+			printf("%s\n",tab);
             printf("Error: sprite %s already exists.\n", dir);
 			free_game_exit(game, 1);
         }
