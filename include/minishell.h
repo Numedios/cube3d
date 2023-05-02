@@ -15,7 +15,7 @@
 # include <limits.h>
 # include "../mlx_linux/mlx.h"
 
-typedef struct map_p
+typedef struct map_p //sert uniquement au parsing
 {
 	int	start;
 	int	height;
@@ -23,7 +23,7 @@ typedef struct map_p
 
 }			t_map_p;
 
-typedef struct sprite
+typedef struct sprite //sert uniquement au parsing
 {
 	char    *north;
 	char    *sud;
@@ -32,6 +32,16 @@ typedef struct sprite
 	char		*bot;
 	char		*top;
 }			t_sprite;
+
+typedef struct	model
+{
+	void    *north;
+	void    *sud;
+	void 	*east;
+	void	*west;
+	int		bot[3];
+	int		top[3];
+}			t_model;
 
 typedef struct player
 {
@@ -43,9 +53,11 @@ typedef struct player
 
 typedef struct s_game
 {
-	char **tab;
-	char **map;
+	char 		**tab;
+	char 		**map;
+	void		*mlx;
 	t_sprite	sprite;
+	t_model		model;
 	t_player	player;
 }		t_game;
 
@@ -106,7 +118,7 @@ int			check_dir(char *line, char *dir);
 
 /* create_map.c */
 
-void	create_map(t_game *game, t_map_p map_p);
+void		create_map(t_game *game, t_map_p map_p);
 
 /* create_map-utils.c */
 
@@ -125,13 +137,19 @@ void		check_wall_map(t_game *game);
 
 /* create_player */
 
-void instance_player(t_game *game, int x, int y);
-void check_player_start(t_game *game, t_player p);
+void 		instance_player(t_game *game, int x, int y);
+void 		check_player_start(t_game *game, t_player p);
+
+/* split.c */
+
+char	**ft_split(char const *s, char c);
 
 /* libft.c */
 
 int			check_sep(char c, char *sep);
 int			ft_strlen(char *str);
+int			ft_strlen_tab(char **tab);
+int			ft_atoi(const char *nptr);
 
 int			main(int argc, char **argv);
 

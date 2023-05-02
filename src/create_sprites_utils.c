@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	check_sprite(char *str, void *mlx)
+int	check_sprite(char *str, void *mlx) // rajouter game et tout free
 {
 	void	*img;
 	int		img_width;

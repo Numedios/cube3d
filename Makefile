@@ -60,6 +60,7 @@ SRC = main.c \
 		create_map_utils.c \
 		parsing_map_utils.c \
 		create_player.c \
+		split.c \
 		libft.c \
 
 

@@ -76,6 +76,44 @@ int set_sprite_value(char *tab, char **sprite, char *dir, t_game *game)
 }
 
 
+void check_color_sprite(t_game *game, char *num, int *set)
+{
+    char **pos;
+    int i;
+
+    i = 0;
+    if (num)
+        pos = ft_split(num, ',');
+    if (!pos || ft_strlen_tab(pos) != 3)
+    {
+        if (pos)
+            free_tab(pos);
+		printf("Error : \"%s\" plus de 3 couleur (R,G,B)\n", num);
+        free_game_exit(game, 1);
+    }
+    while (pos && pos[i])
+    {
+        set[i] = ft_atoi(pos[i]);
+        if (set[i] && (set[i] < 0  || set[i] > 255))
+        {
+            printf("Error : couleur %d pqs compris entre 0 et 255", set[i]);
+            if (pos)
+                free_tab(pos);
+            free_game_exit(game, 1);
+        }
+        i++;
+    }
+    if (pos)
+        free_tab(pos);
+}
+
+
+void check_colors(t_game *game)
+{
+	check_color_sprite(game, game->sprite.bot, game->model.bot);
+	check_color_sprite(game, game->sprite.top, game->model.top);
+}
+
 void	create_sprites(t_game *game)
 {
 	int			i;
@@ -93,4 +131,5 @@ void	create_sprites(t_game *game)
 		i++;
 	}
 	check_all_sprite(game);
+	check_colors(game);
 }
