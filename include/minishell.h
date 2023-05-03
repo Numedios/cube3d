@@ -99,6 +99,8 @@ char		**create_tab(char *file);
 /* set_struc.c */
 
 void		set_sprite(t_sprite *sprite);
+void		set_model(t_game *game);
+void		set_game(t_game *game);
 
 /* create_sprites.c */
 
@@ -128,12 +130,23 @@ int			start_height_map(t_game *game, t_map_p	map_p);
 void		check_map_block(t_game *game, t_map_p	map_p);
 int			start_width_map(t_game *game, t_map_p map_p);
 
+
+/* parsing_map.c */
+
+void		check_map(t_game *game);
+void		parsing_map(t_game *game);
+void		bad_char(t_game *game);
+
 /* parsing_map_utils.c*/
 
 void		check_char_map(t_game *game);
 void		check_wall_line(t_game *game);
 void		check_adjacent(int row, int col, t_game *game);
 void		check_wall_map(t_game *game);
+
+/* parsing.c */
+
+void parsing(char *file, t_game *game);
 
 /* create_player */
 
@@ -150,6 +163,14 @@ int			check_sep(char c, char *sep);
 int			ft_strlen(char *str);
 int			ft_strlen_tab(char **tab);
 int			ft_atoi(const char *nptr);
+
+/* set_mlx.c */
+
+void		*create_sprite(char *str, t_game *game); // rajouter game et tout free
+void		add_model(t_game *game);
+void		init_mlx(t_game *game);
+
+
 
 int			main(int argc, char **argv);
 

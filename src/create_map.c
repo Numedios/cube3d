@@ -1,9 +1,6 @@
 #include "minishell.h"
 
-
 /* check si la map est en 1 block */
-
-
 
 void	create_map(t_game *game, t_map_p map_p)
 {

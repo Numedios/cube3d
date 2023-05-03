@@ -9,3 +9,17 @@ void set_sprite(t_sprite *sprite)
 	sprite->bot = NULL;
 	sprite->top = NULL;
 }
+
+void	set_model(t_game *game)
+{
+	game->model.north = NULL;
+	game->model.sud =  NULL;
+	game->model.east = NULL;
+	game->model.west = NULL;
+}
+
+void set_game(t_game *game)
+{
+	game->tab = NULL;
+	game->map = NULL;
+}
