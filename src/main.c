@@ -76,33 +76,32 @@ void	*create_sprite(char *str, t_game *game) // rajouter game et tout free
 
 void	add_model(t_game *game)
 {
-	//game->model.north = create_sprite(game->sprite.north ,game);
-	//game->model.sud =  create_sprite(game->sprite.sud ,game);
-	//game->model.east =  create_sprite(game->sprite.east ,game);
-	//game->model.west =  create_sprite(game->sprite.west ,game);
+	game->model.north = create_sprite(game->sprite.north ,game);
+	game->model.sud =  create_sprite(game->sprite.sud ,game);
+	game->model.east =  create_sprite(game->sprite.east ,game);
+	game->model.west =  create_sprite(game->sprite.west ,game);
 }
 
 
 void init_mlx(t_game *game)
 {
-	void	*mlx;
 
-	mlx = mlx_init();
-	if (!mlx)
+	game->mlx = mlx_init();
+	if (!game->mlx)
 		free_game_exit(game, 1);
-	//set_model(game);
 	add_model(game);
 }
 
 
 void parsing(char *file, t_game *game)
 {
-	game->tab = create_tab(file);
-	bad_char(game);
+	game->tab = create_tab(file); // get next line
+	bad_char(game); // verifie aucun caractere chelou
 	create_sprites(game); // verier F et C
-	init_mlx(game);
-	parsing_map(game); // finir sa
+	init_mlx(game); // crer la mlx et set les model des texture
+	parsing_map(game); // creation map
 	free_tab((game->tab));
+	free_sprite_char(&game->sprite);
 	game->tab = NULL;
 }
 
