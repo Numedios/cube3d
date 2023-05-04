@@ -22,4 +22,10 @@ void set_game(t_game *game)
 {
 	game->tab = NULL;
 	game->map = NULL;
+	game->mlx = NULL;
+	game->win = NULL;
+	game->player.speed = 1;
+	game->player.hitbox = 4;
+	set_sprite(&game->sprite);
+	set_model(game);
 }

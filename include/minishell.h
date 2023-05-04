@@ -47,6 +47,8 @@ typedef struct player
 {
 	int	x;
 	int	y;
+	int	hitbox;
+	int speed;
 	char dir;
 
 }			t_player;
@@ -56,9 +58,11 @@ typedef struct s_game
 	char 		**tab;
 	char 		**map;
 	void		*mlx;
+	void		*win;
 	t_sprite	sprite;
 	t_model		model;
 	t_player	player;
+	t_map_p		map_p;
 }		t_game;
 
 

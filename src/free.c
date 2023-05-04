@@ -65,6 +65,11 @@ void free_game_exit(t_game *game, int exit_code)
 	game->map = NULL;
 	free_sprite_char(&game->sprite);
 	free_model(&game->model, game->mlx);
+	if (game->win)
+	{
+		mlx_destroy_window(game->mlx, game->win);
+		game->win = NULL;
+	}
 	if (game->mlx)
 	{
 		mlx_destroy_display(game->mlx);

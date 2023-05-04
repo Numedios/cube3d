@@ -32,6 +32,7 @@ void	parsing_map(t_game *game)
 		printf("ERROR : map pas assez longue \n");
 		free_game_exit(game, 1);
 	}
+	game->map_p = map_p;
 	create_map(game, map_p);
 	check_map(game);
 }

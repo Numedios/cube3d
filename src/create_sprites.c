@@ -119,7 +119,6 @@ void	create_sprites(t_game *game)
 	int			i;
 
 	i = 0;
-	set_sprite(&game->sprite);
 	while (game->tab && game->tab[i])
 	{
 		set_sprite_value(game->tab[i], &game->sprite.north, "NO", game);
