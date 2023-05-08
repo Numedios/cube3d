@@ -13,6 +13,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <limits.h>
+# include <math.h>
 # include "../mlx_linux/mlx.h"
 
 typedef struct map_p //sert uniquement au parsing
@@ -45,11 +46,18 @@ typedef struct	model
 
 typedef struct player
 {
-	int	x;
-	int	y;
-	int	hitbox;
-	int speed;
-	char dir;
+	int		x;
+	int		y;
+	double	posx;
+	double	posy;
+	double	dirx;
+	double	diry;
+	double	planex;
+	double	planey;
+	double	camerax;
+	int		hitbox;
+	int		speed;
+	char	dir;
 
 }			t_player;
 
@@ -177,5 +185,6 @@ void		init_mlx(t_game *game);
 
 
 int			main(int argc, char **argv);
+void set_dir_start(t_game *game);
 
 #endif
