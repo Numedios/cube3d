@@ -61,12 +61,25 @@ typedef struct player
 
 }			t_player;
 
+typedef struct s_window
+{
+	int		height;
+	int		length;
+}		t_window;
+
+
+
 typedef struct s_game
 {
 	char 		**tab;
 	char 		**map;
 	void		*mlx;
 	void		*win;
+	int			key;
+	int			*buf;
+	double		wall;
+	void		*pic;
+	t_window	screen;
 	t_sprite	sprite;
 	t_model		model;
 	t_player	player;
@@ -95,6 +108,7 @@ void		parsing_arg(int argc, char **argv);
 
 void		free_tab(char **tab);
 void		free_sprite_char(t_sprite *sprite);
+void    	free_model(t_model *model, void *mlx);
 void		free_game_exit(t_game *game, int exit_code);
 
 /* supp.c */
