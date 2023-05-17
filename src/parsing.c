@@ -16,6 +16,6 @@ void parsing(char *file, t_game *game)
 	parsing_map(game); // creation map
 	change_cord_player(game);
 	free_tab((game->tab));
-	free_sprite_char(&game->sprite);
+	//free_sprite_char(&game->sprite);
 	game->tab = NULL;
 }

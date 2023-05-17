@@ -18,7 +18,7 @@ NAME = minishell
 #==============================================================================#
 
 CC = cc
-CFLAGS = -g 
+CFLAGS = -O3 
 MLXFLAGS := -L mlx_linux -lmlx -lXext -lX11 -lz -lm
 DFLAGS = -MMD
 MKDIR = mkdir -p

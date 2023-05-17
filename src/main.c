@@ -42,6 +42,66 @@ void draw_ver_line(t_game *game, int x, int y_start, int y_end, int color)
     }
 }
 
+t_pic	*new_pic(t_game *img, int width, int height, int x)
+{
+	t_pic	*new;
+	int		bpp;
+	int		endian;
+
+	bpp = 32;
+	endian = 1;
+	new = malloc(sizeof(t_pic));
+	new->width = width;
+	new->height = height;
+	if (x == 1)
+		new->img = mlx_xpm_file_to_image(img->mlx, img->sprite.north, \
+		&new->width, &new->height);
+	else if (x == 2)
+		new->img = mlx_xpm_file_to_image(img->mlx, img->sprite.east, \
+		&new->width, &new->height);
+	else if (x == 3)
+		new->img = mlx_xpm_file_to_image(img->mlx, img->sprite.west, \
+		&new->width, &new->height);
+	else if (x == 4)
+		new->img = mlx_xpm_file_to_image(img->mlx, img->sprite.sud, \
+		&new->width, &new->height);
+	else
+		new->img = mlx_new_image(img->mlx, width, height);
+	new->buf = (int *)mlx_get_data_addr(new->img, &bpp, &x, &endian);
+	return (new);
+}
+static int	put_texture(t_game *img, float start, int line)
+{
+	int		color;
+	t_pic	*texture;
+	double	x_text;
+	double	x_wall;
+	double	y_text;
+
+	if (img->rayDirX > 0 && !img->side)
+		texture = img->east;
+	if (img->rayDirX < 0 && !img->side)
+		texture = img->west;
+	if (img->rayDirY < 0 && img->side)
+		texture = img->north;
+	if (img->rayDirY > 0 && img->side)
+		texture = img->south;
+	if (img->side == 0)
+		x_wall = img->player.posy/64 + img->wall * img->rayDirY;
+	else
+		x_wall = img->player.posx/64 + img->wall * img->rayDirX;
+	x_wall -= floor((x_wall));
+	x_text = (int)(x_wall * (double)(64));
+	if (img->side == 0 && img->rayDirX > 0)
+		x_text = 64 - x_text - 1;
+	if (img->side == 1 && img->rayDirY < 0)
+		x_text = 64 - x_text - 1;
+	color = start * 256 - img->screen.height * 128 + line * 128;
+	y_text = ((color * 64) / line) / 256;
+	color = texture->buf[(int)(y_text * 64 + x_text)];
+	return (color);
+}
+
 
 void put_visionn(t_game *game)
 {
@@ -49,153 +109,116 @@ void put_visionn(t_game *game)
 	int box;
 	int w;
 	double cameraX;
-	double rayDirX;
-	double rayDirY;
 	int mapX;
     int mapY;
-	double sideDistX;
-    double sideDistY;
+	double sideX;
+    double sideY;
 	double deltaDistY;
 	double deltaDistX;
 	double perpWallDist;
 	int stepX;
     int stepY;
 	int hit;
-	int side;
 	int lineHeight;
 	int drawStart;
 	int drawEnd;
 
 	box = game->player.hitbox;
 	i = 0;
+	game->pic = new_pic(game, game->screen.length , game->screen.height, 0);
 	w =  game->screen.length;
 	while(i < w)
 	{
 		cameraX = (2 * i) / (double) w - 1;
-		rayDirX = game->player.dirx + game->player.planex * cameraX;
-		rayDirY = game->player.diry + game->player.planey * cameraX;
-		mapX = (int)game->player.posx ;
-		mapY = (int)game->player.posy;
-
-		if (rayDirX == 0)
-		{
-    		deltaDistX = 1e30;
-		}
-		else
-		{
-    		deltaDistX = fabs(1 / rayDirX);
-		}
-		if (rayDirY == 0)
-		{
-    		deltaDistY = 1e30;
-		}
-		else
-		{
-   			deltaDistY = fabs(1 / rayDirY);
-		}
-
+		game->rayDirX = game->player.diry + game->player.planey * cameraX;
+		game->rayDirY = game->player.dirx + game->player.planex * cameraX;
+		mapX = (int)game->player.y / 64;
+		mapY = (int)game->player.x / 64;
+		stepX = 1;
+		stepY= 1;
+		deltaDistX = fabs(1 / game->rayDirX);
+		deltaDistY = fabs(1 / game->rayDirY);
+		sideX = (mapX + 1.0 - game->player.posy/64) * deltaDistX ;
+		sideY = (mapY + 1.0 - game->player.posx/64) * deltaDistY;
 		hit = 0;
-
-		if(rayDirX < 0)
+		if (game->rayDirX  < 0)
 		{
 			stepX = -1;
-			sideDistX = (game->player.posx - mapX) * deltaDistX;
+			sideX = (game->player.posy/64 - mapX ) * deltaDistX ;
 		}
-		else
-		{
-			stepX = 1;
-			sideDistX = (mapX + 1.0 - game->player.posx ) * deltaDistX;
-		}
-		if(rayDirY < 0)
+		if (game->rayDirY < 0)
 		{
 			stepY = -1;
-			sideDistY = (game->player.posy - mapY) * deltaDistY;
-		}
-		else
-		{
-			stepY = 1;
-			sideDistY = (mapY + 1.0 - game->player.posy) * deltaDistY;
+			sideY = (game->player.posx/64 - mapY) * deltaDistY;
 		}
 		while(hit == 0)
       	{
 			//jump to next map square, either in x-direction, or in y-direction
-			if(sideDistX < sideDistY)
+			//printf("sidex = %f  // sidey = %f", sideX, sideY);
+			if(sideX < sideY)
 			{
-				sideDistX += deltaDistX;
+				sideX += deltaDistX;
 				mapX += stepX;
-				side = 0;
+				game->side = 0;
 			}
 			else
 			{
-				sideDistY += deltaDistY;
+				sideY += deltaDistY;
 				mapY += stepY;
-				side = 1;
+				game->side = 1;
         	}
-			if(game->map[(mapX)/64][(mapY)/64] == '1')
-			{
-				//printf("mapx = %d // mapy = %d\n", (mapX)%64, (mapY)%64);
-				//draw_line((int)game->player.posx, (int)game->player.posy , mapX , mapY, game);
+			if (mapY < 0)
+				mapY = 0;
+			if (mapX < 0)
+				mapX = 0;
+			if(game->map[(mapY)][(mapX)] == '1')
 				hit = 1;
-			}
-
 		}
-		if(side == 0)
-			perpWallDist = (sideDistX - deltaDistX);
+		//printf("mapx = %d // mapy = %d\n",mapX, mapY);
+		if (!game->side)
+		{
+			//printf("0\n");
+			game->wall = (mapX - game->player.posy/64 +  (1 - stepX) / 2) / game->rayDirX;
+		}
 		else
-			perpWallDist = (sideDistY - deltaDistY);
-		lineHeight = (int)(game->screen.height / perpWallDist);
-		drawStart = -lineHeight / 2 + game->screen.height / 2;
-		if(drawStart < 0)
-			drawStart = 0;
-		drawEnd = lineHeight / 2 + game->screen.height / 2;
-		if(drawEnd >= (game->screen.height))
-			drawEnd = (game->screen.height) - 1;
-
-		if(side == 0)
-			game->wall = game->player.posy + perpWallDist * rayDirY;
-      	else
-			game->wall = game->player.posx + perpWallDist * rayDirX;
-
-
-		int line = (int)(game->screen.height / game->wall);
+		{
+			//printf("1\n");
+			game->wall = (mapY - game->player.posx/64 + (1 - stepY) / 2) / game->rayDirY;
+		}
+		int line;
+		int start;
+		int end;
+		int	color;
+		//printf("wall = %f \n", game->wall);
+		if (game->wall < 0)
+			return ;
+		line = (int)(game->screen.height/ game->wall);
 		if (line > 200000)
-		line = 200000;
-		int start = -line / 2 + game->screen.height / 2;
+			line = 200000;
+		start = -line / 2 + game->screen.height / 2;
 		if (start < 0)
 			start = 0; 
-		int end = line / 2 + game->screen.height/ 2;
+		end = line / 2 + game->screen.height / 2;
 		if (end >= game->screen.height)
 			end = game->screen.height - 1;
-		/*printf("wall = %f // height = %d\n", game->wall, game->screen.height); //test a faire ici
-		printf("end = %d // start = %d\n", end, start);
-			exit (1);*/
-		/*while (start < end)
-		{
-			game->buf[(game->pic->width * start) + i] \
-			= put_texture(img, start, line, img->south);
-			start++;
-		}*/
-
-
-		int pitch = 100;
-		int color;
-
-		if (mapY % 64 == 0 && mapX % 64 >= 0 && mapX % 64<= 63 && side == 1)
+		//printf("end = %d // start = %d\n", end ,start);
+		if (game->side == 1)
     		color = 0x00CC3300; // Rouge
-		else if (mapX % 64 == 63 && mapY % 64 >= 0 && mapY  % 64<= 63 && side == 0)
-			color = 0x000000CC; // Bleu
-		else if (mapY % 64 == 63 && mapX % 64 >= 0 && mapX % 64<= 63 && side == 1)
-			color = 0x0000FF99; // Vert
-		else if (mapX % 64 == 0 && mapY % 64 >= 0 && mapY % 64 <= 63 && side == 0)
+		if (game->side == 0)
 			color = 0x00CC6666; // Rose
-		else
-			color = 0x00000033; // Noir
-		draw_ver_line(game, i ,0 , drawStart -40,0x00CC9966);
-		draw_ver_line(game, i ,drawStart -40 , drawEnd + 40,color);
-		draw_ver_line(game, i ,drawEnd + 40 , game->screen.height  , 0x0033CCCC);
+		//draw_ver_line(game, i ,0 , start,0x00CC9966);
+		//printf("start = %d // end = %d\n", start, end);
+		while (start < end)
+		{
+			game->pic->buf[(game->pic->width * start) + i] = put_texture(game, start, line);
+			start++;
+		}
+		//draw_ver_line(game, i ,end  , game->screen.height  , 0x0033CCCC);
+		//exit(1);
 		i++;
 	}
-
+	mlx_put_image_to_window(game->mlx, game->win, game->pic->img, 0, 0);
+	mlx_destroy_image(game->mlx, game->pic->img);
 }
 
 
@@ -390,6 +413,11 @@ void start_game(t_game *game)
 	game->key = 0;
 	set_vecteur_start(game);
 	set_screen(game);
+	game->north = new_pic(game, 0, 0, 1);
+	game->east = new_pic(game, 0, 0, 2);
+	game->west = new_pic(game, 0, 0, 3);
+	game->south = new_pic(game, 0, 0, 4);
+	free_sprite_char(&game->sprite);
 	game->win = mlx_new_window(game->mlx, game->screen.length, game->screen.height , "Hello world!");
 	window_image_loop(game);
 	mlx_hook(game->win, 2, 1L << 0, &press, game);

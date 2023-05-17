@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "minishell.h": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "readline.h": "c",
+        "signal.h": "c"
     }
 }

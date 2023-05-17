@@ -34,6 +34,16 @@ typedef struct sprite //sert uniquement au parsing
 	char		*top;
 }			t_sprite;
 
+typedef struct s_pic
+{
+	int		width;
+	int		height;
+	void	*mlx;
+	void	*win;
+	void	*img;
+	int		*buf;
+}	t_pic;
+
 typedef struct	model
 {
 	void    *north;
@@ -78,7 +88,15 @@ typedef struct s_game
 	int			key;
 	int			*buf;
 	double		wall;
-	void		*pic;
+	double		camera_x;
+	t_pic		*pic;
+	int			side;
+	double rayDirX;
+	double rayDirY;
+	t_pic	*north;
+	t_pic	*east;
+	t_pic	*west;
+	t_pic	*south;
 	t_window	screen;
 	t_sprite	sprite;
 	t_model		model;
