@@ -87,9 +87,9 @@ static int	put_texture(t_game *img, float start, int line)
 	if (img->rayDirY > 0 && img->side)
 		texture = img->south;
 	if (img->side == 0)
-		x_wall = img->player.posy/64 + img->wall * img->rayDirY;
+		x_wall = img->player.posx/64 + img->wall * img->rayDirY;
 	else
-		x_wall = img->player.posx/64 + img->wall * img->rayDirX;
+		x_wall = img->player.posy/64 + img->wall * img->rayDirX;
 	x_wall -= floor((x_wall));
 	x_text = (int)(x_wall * (double)(64));
 	if (img->side == 0 && img->rayDirX > 0)
