@@ -252,7 +252,7 @@ int main(int /*argc*/, char */*argv*/[])
     //move forward if no wall in front of you
     if(keyDown(SDLK_UP))
     {
-      if(worldMap[int(posX + dirX * moveSpeed)][int(posY)] == false) posX += dirX * moveSpeed;
+      if(worldMap[int(posX +  * moveSpeed)][int(posY)] == false) posX += dirX * moveSpeed;
       if(worldMap[int(posX)][int(posY + dirY * moveSpeed)] == false) posY += dirY * moveSpeed;
     }
     //move backwards if no wall behind you

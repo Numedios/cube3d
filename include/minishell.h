@@ -86,6 +86,8 @@ typedef struct s_game
 	void		*mlx;
 	void		*win;
 	int			key;
+	double	x;
+	double	y;
 	int			*buf;
 	double		wall;
 	double		camera_x;

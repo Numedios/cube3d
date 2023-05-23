@@ -57,7 +57,7 @@ void	check_map_block(t_game *game, t_map_p	map_p)
 	i = map_p.start;
 	if (i == -1)
 	{
-		printf("Error : start_height");	
+		printf("Error : check map block");	
 		free_game_exit(game, 1);
 	}
 	while (game->tab && game->tab[i])

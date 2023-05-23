@@ -87,9 +87,9 @@ static int	put_texture(t_game *img, float start, int line)
 	if (img->rayDirY > 0 && img->side)
 		texture = img->south;
 	if (img->side == 0)
-		x_wall = img->player.posx/64 + img->wall * img->rayDirY;
+		x_wall = img->y + img->wall * img->rayDirY;
 	else
-		x_wall = img->player.posy/64 + img->wall * img->rayDirX;
+		x_wall = img->x + img->wall * img->rayDirX;
 	x_wall -= floor((x_wall));
 	x_text = (int)(x_wall * (double)(64));
 	if (img->side == 0 && img->rayDirX > 0)
@@ -130,69 +130,78 @@ void put_visionn(t_game *game)
 	while(i < w)
 	{
 		cameraX = (2 * i) / (double) w - 1;
-		game->rayDirX = game->player.diry + game->player.planey * cameraX;
-		game->rayDirY = game->player.dirx + game->player.planex * cameraX;
-		mapX = (int)game->player.y / 64;
-		mapY = (int)game->player.x / 64;
+		game->rayDirX = game->player.dirx + game->player.planex * cameraX;
+		game->rayDirY = game->player.diry + game->player.planey * cameraX;
+		mapX = (int)game->x;
+		mapY = (int)game->y;
 		stepX = 1;
 		stepY= 1;
 		deltaDistX = fabs(1 / game->rayDirX);
 		deltaDistY = fabs(1 / game->rayDirY);
-		sideX = (mapX + 1.0 - game->player.posy/64) * deltaDistX ;
-		sideY = (mapY + 1.0 - game->player.posx/64) * deltaDistY;
+		sideX= (mapX + 1.0 - game->x) * deltaDistX ;
+		sideY = (mapY + 1.0 - game->y) * deltaDistY;
 		hit = 0;
+		//printf("sidex = %f // sidey =%f\n", sideX, sideY);
 		if (game->rayDirX  < 0)
 		{
 			stepX = -1;
-			sideX = (game->player.posy/64 - mapX ) * deltaDistX ;
+			sideX = (game->x - mapX) * deltaDistX ;
+			//printf("x = %f\n" , game->x);
 		}
 		if (game->rayDirY < 0)
 		{
 			stepY = -1;
-			sideY = (game->player.posx/64 - mapY) * deltaDistY;
+			sideY = (game->y - mapY) * deltaDistY;
+			//printf("y = %f\n" , game->y);
 		}
+		//printf("sidex = %f // sidey =%f\n", sideX, sideY);
+		//printf("stepx= %d // step= %d\n", stepX , stepY);
+
 		while(hit == 0)
       	{
-			//jump to next map square, either in x-direction, or in y-direction
-			//printf("sidex = %f  // sidey = %f", sideX, sideY);
 			if(sideX < sideY)
 			{
 				sideX += deltaDistX;
 				mapX += stepX;
 				game->side = 0;
+				//printf("1\n");
+				//printf("sidex = %f // sidey =%f\n", sideX, sideY);
 			}
 			else
 			{
+				//printf("0 sidex = %f // sidey =%f\n", sideX, sideY);
 				sideY += deltaDistY;
 				mapY += stepY;
 				game->side = 1;
+				//printf("1 sidex = %f // sidey =%f\n", sideX, sideY);
+				//printf("0\n");
         	}
 			if (mapY < 0)
 				mapY = 0;
 			if (mapX < 0)
 				mapX = 0;
+			if (!game->map[mapY] || !game->map[mapY][mapX]
+				|| game->map[mapY][mapX] == ' ')
+			{
+				break;
+			}
 			if(game->map[(mapY)][(mapX)] == '1')
+			{
+				//printf("mapx = %d // mapy = %d\n", mapX , mapY);
 				hit = 1;
+			}
 		}
-		//printf("mapx = %d // mapy = %d\n",mapX, mapY);
-		if (!game->side)
-		{
-			//printf("0\n");
-			game->wall = (mapX - game->player.posy/64 +  (1 - stepX) / 2) / game->rayDirX;
-		}
+		if (game->side == 0)
+			game->wall = (mapX - game->x +  (1 - stepX) / 2) / game->rayDirX;
 		else
-		{
-			//printf("1\n");
-			game->wall = (mapY - game->player.posx/64 + (1 - stepY) / 2) / game->rayDirY;
-		}
+			game->wall = (mapY - (game->y) + (1 - stepY) / 2) / game->rayDirY;
 		int line;
 		int start;
 		int end;
 		int	color;
-		//printf("wall = %f \n", game->wall);
 		if (game->wall < 0)
 			return ;
-		line = (int)(game->screen.height/ game->wall);
+		line = (int)(game->screen.height / game->wall);
 		if (line > 200000)
 			line = 200000;
 		start = -line / 2 + game->screen.height / 2;
@@ -201,22 +210,14 @@ void put_visionn(t_game *game)
 		end = line / 2 + game->screen.height / 2;
 		if (end >= game->screen.height)
 			end = game->screen.height - 1;
-		//printf("end = %d // start = %d\n", end ,start);
-		if (game->side == 1)
-    		color = 0x00CC3300; // Rouge
-		if (game->side == 0)
-			color = 0x00CC6666; // Rose
-		//draw_ver_line(game, i ,0 , start,0x00CC9966);
-		//printf("start = %d // end = %d\n", start, end);
 		while (start < end)
 		{
 			game->pic->buf[(game->pic->width * start) + i] = put_texture(game, start, line);
 			start++;
 		}
-		//draw_ver_line(game, i ,end  , game->screen.height  , 0x0033CCCC);
-		//exit(1);
-		i++;
+ 		i++;
 	}
+	//exit (1);
 	mlx_put_image_to_window(game->mlx, game->win, game->pic->img, 0, 0);
 	mlx_destroy_image(game->mlx, game->pic->img);
 }
@@ -227,33 +228,67 @@ void	window_image_loop(t_game *game)
 	put_visionn(game);
 }
 
-
+/*
 int	check_hitbox_down(t_game *game)
 {
-	int box;
 	int x;
 	int y;
 
-	y = (int) game->player.posy - (game->player.diry * 1);
-	x = (int) game->player.posx - (game->player.dirx * 1);
-	box = game->player.hitbox;
-	if (game->map[((x) / 64)] && game->map[((x) / 64)][(y) / 64] && game->map[((x) / 64)][(y) / 64] == '1') // bas droite
-		return (0);
+	x = (int) game->x - (game->player.dirx * 0.05);
+	y = (int) game->y - (game->player.diry * 0.05);
+	//printf("posx =%f \\ posy = %f\n", game->player.posx , game->player.posy);
+	printf("game->x = %f // game->y = %f\n", game->x, game->y);
+	printf("x = %d // y = %d\n",x, y);
+	//if (game->map[((x))] && game->map[((x) / 64)][(y)] && game->map[((x))][(y)] == '1') // bas droite
+//		return (0);
 	return (1);
+}*/
+
+int check_hitbox_down(t_game *game)
+{
+    int x;
+    int y;
+
+    x = (int)(game->x - (game->player.dirx * 0.05));
+    y = (int)(game->y - (game->player.diry * 0.05));
+	
+    // Vérifie si les coordonnées correspondent à un mur
+    if (game->map[y] && game->map[y][x] && game->map[y][x] == '1')
+        return 0; // Arrête le mouvement
+    return 1; // Autorise le mouvement
 }
 
+/*
 int	check_hitbox_up(t_game *game)
 {
-	int box;
 	int x;
 	int y;
+	double xx;
+	double yy;
 
-	x = (int) game->player.posx + (game->player.dirx * 1);
-	y = (int) game->player.posy + (game->player.diry * 1);
-	box = game->player.hitbox;
-	if (game->map[((x) / 64)] && game->map[((x) / 64)][(y ) / 64] && game->map[((x) / 64)][(y) / 64] == '1') // bas droite
-		return (0);
+	x = (int) game->x + (game->player.dirx * 0.05);
+	y = (int) game->y + (game->player.diry * 0.05);
+
+	//printf("posx =%f \\ posy = %f\n", game->player.posx , game->player.posy);
+	printf("game->x = %f // game->y = %f\n", game->x, game->y);
+	printf("x = %d // y = %d\n",x, y);
+	//if (game->x  != 0.0)
+	//if (game->map[((x))] && game->map[((x))][(y )] && game->map[((x))][(y)] == '1') // bas droite
+	//	return (0);
+	//}
 	return (1);
+}*/
+
+int check_hitbox_up(t_game *game)
+{
+    int x;
+    int y;
+    x = (int)(game->x + (game->player.dirx * 0.05));
+    y = (int)(game->y + (game->player.diry * 0.05));
+    // Vérifie si les coordonnées correspondent à un mur
+	if (game->map[y] && game->map[y][x] && game->map[y][x] == '1')
+        return 0; // Arrête le mouvement
+    return 1; // Autorise le mouvement
 }
 
 int	move_control(t_game *game)
@@ -265,33 +300,34 @@ int	move_control(t_game *game)
 	keycode = game->key;
 	oldPlanex = game->player.planex;
 	oldirx = game->player.dirx;
+	
 	if (keycode == 119 || keycode == 122)
 	{
 		//printf("haut\n");
 		if (check_hitbox_up(game))
 		{
-			game->player.posy = game->player.posy + (game->player.diry * 1);
-			game->player.posx = game->player.posx + (game->player.dirx * 1);
+			game->x = game->x  + (game->player.dirx * 0.05);
+			game->y = game->y  + (game->player.diry * 0.05);
 		}
 	}
-	if (keycode == 100)
+	if (keycode == 97)
 	{
 		//printf("droite\n");
-		game->player.dirx = game->player.dirx * cos(-(0.2)) - game->player.diry * sin(-(0.2));
-     	game->player.diry = oldirx * sin(-(0.2)) + game->player.diry * cos(-(0.2));
+		game->player.dirx = game->player.dirx * cos(-(0.02)) - game->player.diry * sin(-(0.02));
+     	game->player.diry = oldirx * sin(-(0.02)) + game->player.diry * cos(-(0.02));
 
-		game->player.planex = game->player.planex * cos(-0.2) - game->player.planey * sin(-0.2);
-		game->player.planey = oldPlanex * sin(-0.2) + game->player.planey * cos(-0.2);
+		game->player.planex = game->player.planex * cos(-0.02) - game->player.planey * sin(-0.02);
+		game->player.planey = oldPlanex * sin(-0.02) + game->player.planey * cos(-0.02);
 	}
-	if (keycode == 97 || keycode == 113)
+	if (keycode == 100 || keycode == 113)
 	{
 		//printf("gauche\n");
 
-		game->player.dirx = game->player.dirx * cos((0.2)) - game->player.diry * sin((0.2));
-     	game->player.diry = oldirx * sin(0.2) + game->player.diry * cos((0.2));
+		game->player.dirx = game->player.dirx * cos((0.02)) - game->player.diry * sin((0.02));
+     	game->player.diry = oldirx * sin(0.02) + game->player.diry * cos((0.02));
 
-		game->player.planex = game->player.planex * cos(0.2) - game->player.planey * sin(0.2);
-		game->player.planey = oldPlanex * sin(0.2) + game->player.planey * cos(0.2);
+		game->player.planex = game->player.planex * cos(0.02) - game->player.planey * sin(0.02);
+		game->player.planey = oldPlanex * sin(0.02) + game->player.planey * cos(0.02);
 	}
 	
 	if (keycode == 115)
@@ -299,8 +335,8 @@ int	move_control(t_game *game)
 		//printf("bas\n");
 		if (check_hitbox_down(game))
 		{
-			game->player.posy = game->player.posy - (game->player.diry * 1);
-			game->player.posx = game->player.posx - (game->player.dirx * 1);
+			game->x = game->x  - (game->player.dirx * 0.05);
+			game->y = game->y  - (game->player.diry * 0.05);
 		}
 	}
 	if (keycode == 65307)
@@ -312,46 +348,29 @@ int	move_control(t_game *game)
 
 void set_dir_start(t_game *game)
 {
+	game->player.dirx = 0;
+	game->player.diry = -1;
+	game->player.planex = 0.66;
+	game->player.planey = 0;
 	if (game->map[game->player.x] && game->map[game->player.x][game->player.y] == 'W')
-	{
-		game->player.dirx = 0;
-		game->player.diry = -1;
-	}
-	if (game->map[game->player.x] && game->map[game->player.x][game->player.y] == 'E')
-	{
-		game->player.dirx = 0;
-		game->player.diry = 1;
-	}
-	if (game->map[game->player.x] && game->map[game->player.x][game->player.y] == 'S')
-	{
-		game->player.dirx = 1;
-		game->player.diry = 0;
-		game->player.planey = -0.66;
-    	game->player.planex = 0;
-	}
-	if (game->map[game->player.x] && game->map[game->player.x][game->player.y] == 'N')
 	{
 		game->player.dirx = -1;
 		game->player.diry = 0;
-	}
-	if(game->player.dirx > 0)
-	{
+		game->player.planex = 0;
     	game->player.planey = -0.66;
-    	game->player.planex = 0;
 	}
-	else if(game->player.dirx < 0)
+	if (game->map[game->player.x] && game->map[game->player.x][game->player.y] == 'E')
 	{
+		game->player.dirx = 1;
+		game->player.diry = 0;
+		game->player.planex = 0;
     	game->player.planey = 0.66;
-    	game->player.planex = 0;
 	}
-	else if(game->player.diry > 0)
+	if (game->map[game->player.x] && game->map[game->player.x][game->player.y] == 'S')
 	{
-    	game->player.planex = 0.66;
-    	game->player.planey = 0;
-	}
-	else if(game->player.diry < 0)
-	{
-    	game->player.planex = -0.66;
+		game->player.dirx = 0;
+		game->player.diry = 1;
+		game->player.planex = -0.66;
     	game->player.planey = 0;
 	}
 }
@@ -407,12 +426,49 @@ int free_game_exite(t_game *game)
 	exit(1);
 }
 
+double	find_x(char **map, t_game *img)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j] && map[i][j] == '0' || map[i][j] && map[i][j] == '1' || map[i][j] && map[i][j] == ' ')
+			j++;
+		if (map[i][j] && map[i][j] != '0' && map[i][j] && map[i][j] != '1' && map[i][j] && map[i][j] != ' ')
+			return (j + 0.5);
+		i++;
+	}
+	return (0);
+}
+
+double	find_y(char **map, t_game *img)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j] && map[i][j] == '0' || map[i][j] && map[i][j] == '1' || map[i][j] && map[i][j] == ' ')
+			j++;
+		if (map[i][j] && map[i][j] != '0' && map[i][j] && map[i][j] != '1' && map[i][j] && map[i][j] != ' ')
+			return (i + 0.5);
+		i++;
+	}
+	return (0);
+}
 
 void start_game(t_game *game)
 {
 	game->key = 0;
 	set_vecteur_start(game);
 	set_screen(game);
+	game->x = find_x(game->map, game);
+	game->y = find_y(game->map, game);
 	game->north = new_pic(game, 0, 0, 1);
 	game->east = new_pic(game, 0, 0, 2);
 	game->west = new_pic(game, 0, 0, 3);

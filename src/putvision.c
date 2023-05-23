@@ -32,7 +32,7 @@ void put_vision(t_game *game)
 		rayDirY = game->player.diry + game->player.planey * cameraX;
 
 		mapX = (int)game->player.posy;
-		mapY = (int)game->player.posx;
+		mapY = (int)game->;
 
 		deltaDistX = (rayDirX == 0) ? 1e30 : fabs(1 / rayDirX);
 		deltaDistY = (rayDirY == 0) ? 1e30 : fabs(1 / rayDirY);
