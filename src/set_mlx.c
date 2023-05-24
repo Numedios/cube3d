@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_mlx.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbelabba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/24 19:38:05 by sbelabba          #+#    #+#             */
+/*   Updated: 2023/05/24 19:38:06 by sbelabba         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	*create_sprite(char *str, t_game *game) // rajouter game et tout free
+void	*create_sprite(char *str, t_game *game)
 {
 	void	*img;
 	int		img_width;
@@ -13,9 +25,7 @@ void	*create_sprite(char *str, t_game *game) // rajouter game et tout free
 	return (img);
 }
 
-
-
-void init_mlx(t_game *game)
+void	init_mlx(t_game *game)
 {
 	game->mlx = mlx_init();
 	if (!game->mlx)

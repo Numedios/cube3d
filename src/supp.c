@@ -1,8 +1,10 @@
 #include "minishell.h"
 
-void    print_tab(char **tab)
+/* fichier a supp */
+
+void	print_tab(char **tab)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (tab && tab[i])

@@ -57,6 +57,17 @@ int	start_height_map(t_game *game, t_map_p	map_p)
 			return (i - map_p.start);
 		i++;
 	}
+	while (game->tab && game->tab[i])
+	{
+		j = 0;
+		while (game->tab && game->tab[i] && game->tab[i][j] && (game->tab[i][j] == '\r' || game->tab[i][j] == ' '))
+			j++;
+		if (game->tab && game->tab[i] && game->tab[i][j] && (game->tab[i][j] != '\r' && game->tab[i][j] != ' '))
+		{
+			printf("Error :\n%s\nrouver apres la map\n", game->tab[i]);
+			free_game_exit(game, 1);
+		}
+	}
 	return (i - map_p.start);
 }
 
@@ -68,7 +79,7 @@ void	check_map_block(t_game *game, t_map_p	map_p)
 	i = map_p.start;
 	if (i == -1)
 	{
-		printf("Error : check map block");
+		printf("Error : check map block\n");
 		free_game_exit(game, 1);
 	}
 	while (game->tab && game->tab[i])
@@ -85,9 +96,9 @@ void	check_map_block(t_game *game, t_map_p	map_p)
 		j = 0;
 		while (game->tab && game->tab[i] && game->tab[i][j] && game->tab[i][j] == ' ')
 			j++;
-		if (game->tab && game->tab[i] && game->tab[i][j] && game->tab[i][j] == '1')
+		if (game->tab && game->tab[i] && game->tab[i][j] && (game->tab[i][j] != ' ' &&  game->tab[i][j] != '\r'))
 		{
-			printf("ERROR : map en plusieurs block\n");
+			printf("ERROR :\n%s\nse situe sous la map\n", game->tab[i]);
 			free_game_exit(game, 1);
 		}
 		i++;

@@ -1,14 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   create_sprites.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbelabba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/24 19:00:58 by sbelabba          #+#    #+#             */
+/*   Updated: 2023/05/24 19:00:59 by sbelabba         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*cut_split_sprite(char *line, t_game *game)
 {
-	int 	i;
+	int		i;
 	int		size;
 	char	*res;
 
 	i = 0;
 	res = NULL;
-	while(line && *line &&  *line == ' ')
+	while (line && *line && *line == ' ')
 		line++;
 	size = size_path(line);
 	res = malloc(sizeof(char) * (size + 1));
@@ -16,18 +28,17 @@ char	*cut_split_sprite(char *line, t_game *game)
 		free_game_exit(game, 1);
 	while (i < size && line)
 	{
-		res[i] = line[i];	
+		res[i] = line[i];
 		i++;
 	}
 	res[i] = '\0';
-	return(res);
+	return (res);
 }
-
 
 char	*split_sprite(char *line, char *dir, t_game *game)
 {
-	int i;
-	char *res;
+	int		i;
+	char	*res;
 
 	i = 0;
 	res = NULL;
@@ -36,7 +47,7 @@ char	*split_sprite(char *line, char *dir, t_game *game)
 		while (line && line[i] && line[i] == ' ')
 			i++;
 		if (ft_compstr(line + i, dir))
-			res = cut_split_sprite(line + (i +2), game);
+			res = cut_split_sprite(line + (i + 2), game);
 		i = i +2;
 		while (line && line[i] && line[i] == ' ')
 			i++;
@@ -51,64 +62,63 @@ char	*split_sprite(char *line, char *dir, t_game *game)
 				free(res);
 			free_game_exit(game, 1);
 		}
-		break;	
+		break ;
 	}
+	if (!res)
+		free_game_exit(game, 1);
 	return (res);
 }
 
-int set_sprite_value(char *tab, char **sprite, char *dir, t_game *game)
+int	set_sprite_value(char *tab, char **sprite, char *dir, t_game *game)
 {
-    if (check_dir(tab, dir))
-    {
-        if (!(*sprite))
-        {
-           	*sprite = split_sprite(tab, dir, game);
-            return (0);
-        }
-        else
-        {
-			printf("%s\n",tab);
-            printf("Error: sprite %s already exists.\n", dir);
+	if (check_dir(tab, dir))
+	{
+		if (!(*sprite))
+		{
+			*sprite = split_sprite(tab, dir, game);
+			return (0);
+		}
+		else
+		{
+			printf("Error: sprite %s already exists.\n", dir);
 			free_game_exit(game, 1);
-        }
-    }
-    return (0);
+		}
+	}
+	return (0);
 }
 
-
-void check_color_sprite(t_game *game, char *num, int *set)
+void	check_color_sprite(t_game *game, char *num, int *set)
 {
-    char **pos;
-    int i;
+	char	**pos;
+	int		i;
 
-    i = 0;
-    if (num)
-        pos = ft_split(num, ',');
-    if (!pos || ft_strlen_tab(pos) != 3)
-    {
-        if (pos)
-            free_tab(pos);
+	i = 0;
+	if (num)
+		pos = ft_split(num, ',');
+	if (!pos || ft_strlen_tab(pos) != 3)
+	{
+		if (pos)
+			free_tab(pos);
 		printf("Error : \"%s\" plus de 3 couleur (R,G,B)\n", num);
-        free_game_exit(game, 1);
-    }
-    while (pos && pos[i])
-    {
-        set[i] = ft_atoi(pos[i]);
-        if (set[i] && (set[i] < 0  || set[i] > 255))
-        {
-            printf("Error : couleur %d pqs compris entre 0 et 255", set[i]);
-            if (pos)
-                free_tab(pos);
-            free_game_exit(game, 1);
-        }
-        i++;
-    }
-    if (pos)
-        free_tab(pos);
+		free_game_exit(game, 1);
+	}
+	while (pos && pos[i])
+	{
+		set[i] = ft_atoi(pos[i]);
+		if (set[i] && (set[i] < 0 || set[i] > 255))
+		{
+			printf("Error : couleur %d pqs compris entre 0 et 255", set[i]);
+			if (pos)
+				free_tab(pos);
+			free_game_exit(game, 1);
+		}
+		i++;
+	}
+	if (pos)
+		free_tab(pos);
 }
 
-
-void check_colors(t_game *game)
+void	check_colors(t_game *game)
 {
 	check_color_sprite(game, game->sprite.bot, game->model.bot);
 	check_color_sprite(game, game->sprite.top, game->model.top);

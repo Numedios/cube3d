@@ -5,9 +5,9 @@ NO     ./tx/64/walln.xpm
 
 WE   ./tx/64/wallw.xpm
 
-EA ./tx/64/walle.xpm
+EA   ./tx/64/walle.xpm
 
-F   0,120,120
+F   0,120,25
 
 C 75,89,0 
 
