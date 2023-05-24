@@ -54,6 +54,19 @@ void    free_model(t_model *model, void *mlx)
 	model->west = NULL; 
 }
 
+
+void    free_pic(t_game *game)
+{
+	mlx_destroy_image(game->mlx, game->north->img);
+	mlx_destroy_image(game->mlx, game->east->img);
+	mlx_destroy_image(game->mlx, game->west->img);
+	mlx_destroy_image(game->mlx, game->south->img);
+	free(game->north);
+	free(game->east);
+	free(game->west);
+	free(game->south);
+}
+
 void free_game_exit(t_game *game, int exit_code)
 {
 	if (game->tab)
@@ -65,6 +78,7 @@ void free_game_exit(t_game *game, int exit_code)
 	game->map = NULL;
 	free_sprite_char(&game->sprite);
 	free_model(&game->model, game->mlx);
+	free_pic(game);
 	if (game->win)
 	{
 		mlx_destroy_window(game->mlx, game->win);

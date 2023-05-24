@@ -102,13 +102,31 @@ static int	put_texture(t_game *img, float start, int line)
 	return (color);
 }
 
+void	get_on_the_floor(t_game *img)
+{
+	int	i;
+
+	i = 0;
+	while (i < (img->screen.length * img->screen.height) / 2)
+	{
+		img->pic->buf[i] = img->model.top[0] << 16;
+		img->pic->buf[i] += img->model.top[1] << 8;
+		img->pic->buf[i] += img->model.top[2];
+		i++;
+	}
+	while (i < img->screen.length  * img->screen.height)
+	{
+		img->pic->buf[i] = img->model.bot[0] << 16;
+		img->pic->buf[i] += img->model.bot[1]  << 8;
+		img->pic->buf[i] += img->model.bot[2] ;
+		i++;
+	}
+}
 
 void put_visionn(t_game *game)
 {
 	int i;
 	int box;
-	int w;
-	double cameraX;
 	int mapX;
     int mapY;
 	double sideX;
@@ -126,12 +144,12 @@ void put_visionn(t_game *game)
 	box = game->player.hitbox;
 	i = 0;
 	game->pic = new_pic(game, game->screen.length , game->screen.height, 0);
-	w =  game->screen.length;
-	while(i < w)
+	get_on_the_floor(game);
+	while(i < game->screen.length)
 	{
-		cameraX = (2 * i) / (double) w - 1;
-		game->rayDirX = game->player.dirx + game->player.planex * cameraX;
-		game->rayDirY = game->player.diry + game->player.planey * cameraX;
+		game->cameraX = (2 * i) / (double) game->screen.length - 1;
+		game->rayDirX = game->player.dirx + game->player.planex * game->cameraX;
+		game->rayDirY = game->player.diry + game->player.planey * game->cameraX;
 		mapX = (int)game->x;
 		mapY = (int)game->y;
 		stepX = 1;
@@ -217,9 +235,9 @@ void put_visionn(t_game *game)
 		}
  		i++;
 	}
-	//exit (1);
 	mlx_put_image_to_window(game->mlx, game->win, game->pic->img, 0, 0);
 	mlx_destroy_image(game->mlx, game->pic->img);
+	free(game->pic);
 }
 
 
@@ -228,22 +246,6 @@ void	window_image_loop(t_game *game)
 	put_visionn(game);
 }
 
-/*
-int	check_hitbox_down(t_game *game)
-{
-	int x;
-	int y;
-
-	x = (int) game->x - (game->player.dirx * 0.05);
-	y = (int) game->y - (game->player.diry * 0.05);
-	//printf("posx =%f \\ posy = %f\n", game->player.posx , game->player.posy);
-	printf("game->x = %f // game->y = %f\n", game->x, game->y);
-	printf("x = %d // y = %d\n",x, y);
-	//if (game->map[((x))] && game->map[((x) / 64)][(y)] && game->map[((x))][(y)] == '1') // bas droite
-//		return (0);
-	return (1);
-}*/
-
 int check_hitbox_down(t_game *game)
 {
     int x;
@@ -251,44 +253,21 @@ int check_hitbox_down(t_game *game)
 
     x = (int)(game->x - (game->player.dirx * 0.05));
     y = (int)(game->y - (game->player.diry * 0.05));
-	
-    // Vérifie si les coordonnées correspondent à un mur
     if (game->map[y] && game->map[y][x] && game->map[y][x] == '1')
-        return 0; // Arrête le mouvement
-    return 1; // Autorise le mouvement
+        return 0;
+    return 1;
 }
-
-/*
-int	check_hitbox_up(t_game *game)
-{
-	int x;
-	int y;
-	double xx;
-	double yy;
-
-	x = (int) game->x + (game->player.dirx * 0.05);
-	y = (int) game->y + (game->player.diry * 0.05);
-
-	//printf("posx =%f \\ posy = %f\n", game->player.posx , game->player.posy);
-	printf("game->x = %f // game->y = %f\n", game->x, game->y);
-	printf("x = %d // y = %d\n",x, y);
-	//if (game->x  != 0.0)
-	//if (game->map[((x))] && game->map[((x))][(y )] && game->map[((x))][(y)] == '1') // bas droite
-	//	return (0);
-	//}
-	return (1);
-}*/
 
 int check_hitbox_up(t_game *game)
 {
     int x;
     int y;
+
     x = (int)(game->x + (game->player.dirx * 0.05));
     y = (int)(game->y + (game->player.diry * 0.05));
-    // Vérifie si les coordonnées correspondent à un mur
 	if (game->map[y] && game->map[y][x] && game->map[y][x] == '1')
-        return 0; // Arrête le mouvement
-    return 1; // Autorise le mouvement
+        return 0;
+    return 1;
 }
 
 int	move_control(t_game *game)
@@ -421,6 +400,10 @@ int free_game_exite(t_game *game)
 		mlx_destroy_display(game->mlx);
 		free(game->mlx);
 		game->mlx = NULL;
+	}
+	if (game->pic)
+	{
+
 	}
 	
 	exit(1);

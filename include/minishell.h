@@ -95,6 +95,7 @@ typedef struct s_game
 	int			side;
 	double rayDirX;
 	double rayDirY;
+	double cameraX;
 	t_pic	*north;
 	t_pic	*east;
 	t_pic	*west;
@@ -130,6 +131,7 @@ void		free_tab(char **tab);
 void		free_sprite_char(t_sprite *sprite);
 void    	free_model(t_model *model, void *mlx);
 void		free_game_exit(t_game *game, int exit_code);
+void    	free_pic(t_game *game);
 
 /* supp.c */
 
