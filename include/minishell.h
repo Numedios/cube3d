@@ -46,10 +46,6 @@ typedef struct s_pic
 
 typedef struct	model
 {
-	void    *north;
-	void    *sud;
-	void 	*east;
-	void	*west;
 	int		bot[3];
 	int		top[3];
 }			t_model;
@@ -58,8 +54,6 @@ typedef struct player
 {
 	int		x;
 	int		y;
-	double	posx;
-	double	posy;
 	double	dirx;
 	double	diry;
 	double	planex;
@@ -91,15 +85,25 @@ typedef struct s_game
 	int			*buf;
 	double		wall;
 	double		camera_x;
-	t_pic		*pic;
 	int			side;
-	double rayDirX;
-	double rayDirY;
-	double cameraX;
+	int mapX;
+    int mapY;
+	int hit;
+	int stepX;
+    int stepY;
+	double deltadisty;
+	double deltadistx;
+	double raydirx;
+	double raydiry;
+	double camerax;
+	double perpwalldist;
+	double sidex;
+    double sidey;
 	t_pic	*north;
 	t_pic	*east;
 	t_pic	*west;
 	t_pic	*south;
+	t_pic		*pic;
 	t_window	screen;
 	t_sprite	sprite;
 	t_model		model;
@@ -147,7 +151,6 @@ char		**create_tab(char *file);
 /* set_struc.c */
 
 void		set_sprite(t_sprite *sprite);
-void		set_model(t_game *game);
 void		set_game(t_game *game);
 
 /* create_sprites.c */
@@ -205,6 +208,15 @@ void 		check_player_start(t_game *game, t_player p);
 
 char	**ft_split(char const *s, char c);
 
+/* move */
+int check_hitbox_down(t_game *game);
+int check_hitbox_up(t_game *game);
+void camera_left(t_game *game, double oldirx, double oldPlanex);
+void camera_right(t_game *game, double oldirx, double oldPlanex);
+void move_up(t_game *game);
+void move_down(t_game *game);
+int	move_control(t_game *game);
+
 /* libft.c */
 
 int			check_sep(char c, char *sep);
@@ -215,12 +227,31 @@ int			ft_atoi(const char *nptr);
 /* set_mlx.c */
 
 void		*create_sprite(char *str, t_game *game); // rajouter game et tout free
-void		add_model(t_game *game);
 void		init_mlx(t_game *game);
 
+/* math.c */
 
+void	set_math(t_game *game, int i);
+int	check_hit(t_game *game);
+void	check_side(t_game *game);
+void	put_pic(t_game *game, int i);
+void window_image_loop(t_game *game);
 
+/* start_game.c */
+
+int	press(int keycode, t_game *game);
+int	release(int keycode, t_game *game);
+void start_game(t_game *game);
+
+t_pic	*new_pic(t_game *img, int width, int height, int x);
 int			main(int argc, char **argv);
+int	put_texture(t_game *img, float start, int line);
+void	get_on_the_floor(t_game *img);
 void set_dir_start(t_game *game);
+void set_screen(t_game *game);
+int free_game_exite(t_game *game);
+double	find_x(char **map, t_game *img);
+double	find_y(char **map, t_game *img);
+int main(int argc, char **argv);
 
 #endif

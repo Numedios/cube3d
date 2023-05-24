@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_map_utils.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbelabba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/24 18:46:36 by sbelabba          #+#    #+#             */
+/*   Updated: 2023/05/24 18:46:37 by sbelabba         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void check_char_map(t_game *game)
+void	check_char_map(t_game *game)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 	int	player;
 
 	i = 0;
@@ -13,12 +25,12 @@ void check_char_map(t_game *game)
 		j = 0;
 		while (game->map[i] && game->map[i][j])
 		{
-			if (game->map[i][j] && !check_sep(game->map[i][j]," 10NSWE"))
+			if (game->map[i][j] && !check_sep(game->map[i][j], " 10NSWE"))
 			{
 				printf("ERROR : Map L%d = %s // *%c*\n", i, game->map[i], game->map[i][j]);
 				free_game_exit(game, 1);
 			}
-			if (game->map[i][j] && check_sep(game->map[i][j],"NSWE")) // si definir position joueur autant le faire ici
+			if (game->map[i][j] && check_sep(game->map[i][j], "NSWE"))
 			{
 				instance_player(game, i, j);
 				player++;
@@ -35,10 +47,10 @@ void check_char_map(t_game *game)
 	check_player_start(game, game->player);
 }
 
-void check_wall_line(t_game *game)
+void	check_wall_line(t_game *game)
 {
-	int j;
-	int last_line;
+	int	j;
+	int	last_line;
 
 	j = 0;
 	last_line = 0;
@@ -65,7 +77,7 @@ void check_wall_line(t_game *game)
 	}
 }
 
-void check_adjacent(int row, int col, t_game *game)
+void	check_adjacent(int row, int col, t_game *game)
 {
 	if (game->map[row + 1] && game->map[row + 1][col] && game->map[row + 1][col] != '1' && game->map[row + 1][col] != ' ')
 	{
@@ -89,10 +101,10 @@ void check_adjacent(int row, int col, t_game *game)
 	}
 }
 
-void check_wall_map(t_game *game)
+void	check_wall_map(t_game *game)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	check_wall_line(game);
 	i = 0;

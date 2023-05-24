@@ -65,6 +65,11 @@ SRC = main.c \
 		split.c \
 		set_mlx.c \
 		libft.c \
+		move.c \
+		move_utils.c \
+		math.c \
+		start_game.c \
+		set_value.c \
 
 
 #==============================================================================#

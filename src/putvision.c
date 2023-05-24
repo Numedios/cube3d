@@ -4,16 +4,16 @@ void put_vision(t_game *game)
 	int i;
 	int box;
 	int w;
-	double cameraX;
-	double rayDirX;
-	double rayDirY;
+	double camerax;
+	double raydirx;
+	double raydiry;
 	int mapX;
     int mapY;
 	double sideDistX;
     double sideDistY;
-	double deltaDistY;
-	double deltaDistX;
-	double perpWallDist;
+	double deltadisty;
+	double deltadistx;
+	double perpwalldist;
 	int stepX;
     int stepY;
 	int hit;
@@ -27,50 +27,50 @@ void put_vision(t_game *game)
 	w = 64 * game->map_p.max_widht;
 	while(i < w)
 	{
-		cameraX = 2 * i / (double)w - 1;
-		rayDirX = game->player.dirx + game->player.planex * cameraX;
-		rayDirY = game->player.diry + game->player.planey * cameraX;
+		camerax = 2 * i / (double)w - 1;
+		raydirx = game->player.dirx + game->player.planex * camerax;
+		raydiry = game->player.diry + game->player.planey * camerax;
 
 		mapX = (int)game->player.posy;
 		mapY = (int)game->;
 
-		deltaDistX = (rayDirX == 0) ? 1e30 : fabs(1 / rayDirX);
-		deltaDistY = (rayDirY == 0) ? 1e30 : fabs(1 / rayDirY);
+		deltadistx = (raydirx == 0) ? 1e30 : fabs(1 / raydirx);
+		deltadisty = (raydiry == 0) ? 1e30 : fabs(1 / raydiry);
 
 		hit = 0;
 
-		if(rayDirX < 0)
+		if(raydirx < 0)
 		{
 			stepX = -1;
-			sideDistX = (game->player.posx - mapX) * deltaDistX;
+			sideDistX = (game->player.posx - mapX) * deltadistx;
 		}
 		else
 		{
 			stepX = 1;
-			sideDistX = (mapX + 1.0 - game->player.posx ) * deltaDistX;
+			sideDistX = (mapX + 1.0 - game->player.posx ) * deltadistx;
 		}
-		if(rayDirY < 0)
+		if(raydiry < 0)
 		{
 			stepY = -1;
-			sideDistY = (game->player.posy - mapY) * deltaDistY;
+			sideDistY = (game->player.posy - mapY) * deltadisty;
 		}
 		else
 		{
 			stepY = 1;
-			sideDistY = (mapY + 1.0 - game->player.posy) * deltaDistY;
+			sideDistY = (mapY + 1.0 - game->player.posy) * deltadisty;
 		}
 		while(hit == 0)
       	{
 			//jump to next map square, either in x-direction, or in y-direction
 			if(sideDistX < sideDistY)
 			{
-				sideDistX += deltaDistX;
+				sideDistX += deltadistx;
 				mapX += stepX;
 				side = 0;
 			}
 			else
 			{
-				sideDistY += deltaDistY;
+				sideDistY += deltadisty;
 				mapY += stepY;
 				side = 1;
         	}
@@ -83,10 +83,10 @@ void put_vision(t_game *game)
 
 		}
 		if(side == 0)
-			perpWallDist = (sideDistX - deltaDistX);
+			perpwalldist = (sideDistX - deltadistx);
 		else
-			perpWallDist = (sideDistY - deltaDistY);
-		lineHeight = (int)(game->map_p.height / perpWallDist);
+			perpwalldist = (sideDistY - deltadisty);
+		lineHeight = (int)(game->map_p.height / perpwalldist);
 		drawStart = -lineHeight / 2 + game->map_p.height / 2;
 		if(drawStart < 0)
 			drawStart = 0;
@@ -106,9 +106,9 @@ void put_visionn(t_game *game)
     for(int x = 0; x < w; x++)
     {
       //calculate ray position and direction
-      double cameraX = 2 * x / (double)w - 1; //x-coordinate in camera space
-      double rayDirX = game->player.dirx + game->player.planex * cameraX;
-      double rayDirY = game->player.diry + game->player.planey * cameraX;
+      double camerax = 2 * x / (double)w - 1; //x-coordinate in camera space
+      double raydirx = game->player.dirx + game->player.planex * camerax;
+      double raydiry = game->player.diry + game->player.planey * camerax;
       //which box of the map we're in
       int mapX = (int) (game->player.posx);
       int mapY = (int) (game->player.posx);
@@ -119,19 +119,19 @@ void put_visionn(t_game *game)
 
       //length of ray from one x or y-side to next x or y-side
       //these are derived as:
-      //deltaDistX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX))
-      //deltaDistY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY))
-      //which can be simplified to abs(|rayDir| / rayDirX) and abs(|rayDir| / rayDirY)
-      //where |rayDir| is the length of the vector (rayDirX, rayDirY). Its length,
+      //deltadistx = sqrt(1 + (raydiry * raydiry) / (raydirx * raydirx))
+      //deltadisty = sqrt(1 + (raydirx * raydirx) / (raydiry * raydiry))
+      //which can be simplified to abs(|rayDir| / raydirx) and abs(|rayDir| / raydiry)
+      //where |rayDir| is the length of the vector (raydirx, raydiry). Its length,
       //unlike (dirX, dirY) is not 1, however this does not matter, only the
-      //ratio between deltaDistX and deltaDistY matters, due to the way the DDA
+      //ratio between deltadistx and deltadisty matters, due to the way the DDA
       //stepping further below works. So the values can be computed as below.
       // Division through zero is prevented, even though technically that's not
       // needed in C++ with IEEE 754 floating point values.
-      double deltaDistX = (rayDirX == 0) ? 1e30 : fabs(1 / rayDirX);
-      double deltaDistY = (rayDirY == 0) ? 1e30 : fabs(1 / rayDirY);
+      double deltadistx = (raydirx == 0) ? 1e30 : fabs(1 / raydirx);
+      double deltadisty = (raydiry == 0) ? 1e30 : fabs(1 / raydiry);
 
-      double perpWallDist;
+      double perpwalldist;
 
       //what direction to step in x or y-direction (either +1 or -1)
       int stepX;
@@ -140,25 +140,25 @@ void put_visionn(t_game *game)
       int hit = 0; //was there a wall hit?
       int side; //was a NS or a EW wall hit?
       //calculate step and initial sideDist
-      if(rayDirX < 0)
+      if(raydirx < 0)
       {
         stepX = -1;
-        sideDistX = (game->player.posx - mapX) * deltaDistX;
+        sideDistX = (game->player.posx - mapX) * deltadistx;
       }
       else
       {
         stepX = 1;
-        sideDistX = (mapX + 1.0 - game->player.posx) * deltaDistX;
+        sideDistX = (mapX + 1.0 - game->player.posx) * deltadistx;
       }
-      if(rayDirY < 0)
+      if(raydiry < 0)
       {
         stepY = -1;
-        sideDistY = (game->player.posy - mapY) * deltaDistY;
+        sideDistY = (game->player.posy - mapY) * deltadisty;
       }
       else
       {
         stepY = 1;
-        sideDistY = (mapY + 1.0 - game->player.posy) * deltaDistY;
+        sideDistY = (mapY + 1.0 - game->player.posy) * deltadisty;
       }
       //perform DDA
       while(hit == 0)
@@ -166,13 +166,13 @@ void put_visionn(t_game *game)
         //jump to next map square, either in x-direction, or in y-direction
         if(sideDistX < sideDistY)
         {
-          sideDistX += deltaDistX;
+          sideDistX += deltadistx;
           mapX += stepX;
           side = 0;
         }
         else
         {
-          sideDistY += deltaDistY;
+          sideDistY += deltadisty;
           mapY += stepY;
           side = 1;
         }
@@ -181,15 +181,15 @@ void put_visionn(t_game *game)
       }
       //Calculate distance projected on camera direction. This is the shortest distance from the point where the wall is
       //hit to the camera plane. Euclidean to center camera point would give fisheye effect!
-      //This can be computed as (mapX - posX + (1 - stepX) / 2) / rayDirX for side == 0, or same formula with Y
+      //This can be computed as (mapX - posX + (1 - stepX) / 2) / raydirx for side == 0, or same formula with Y
       //for size == 1, but can be simplified to the code below thanks to how sideDist and deltaDist are computed:
       //because they were left scaled to |rayDir|. sideDist is the entire length of the ray above after the multiple
       //steps, but we subtract deltaDist once because one step more into the wall was taken above.
-      if(side == 0) perpWallDist = (sideDistX - deltaDistX);
-      else          perpWallDist = (sideDistY - deltaDistY);
+      if(side == 0) perpwalldist = (sideDistX - deltadistx);
+      else          perpwalldist = (sideDistY - deltadisty);
 
       //Calculate height of line to draw on screen
-      int lineHeight = (int)(64*game->map_p.height / perpWallDist);
+      int lineHeight = (int)(64*game->map_p.height / perpwalldist);
 
       //calculate lowest and highest pixel to fill in current stripe
       int drawStart = -lineHeight / 2 + 64*game->map_p.height / 2;

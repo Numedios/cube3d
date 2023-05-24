@@ -38,22 +38,6 @@ void    free_sprite_char(t_sprite *sprite)
 	sprite->top = NULL; 
 }
 
-void    free_model(t_model *model, void *mlx)
-{
-	if (model->north)
-		mlx_destroy_image(mlx, model->north);
-	model->north = NULL;
-	if (model->sud)
-		mlx_destroy_image(mlx, model->sud);
-	model->sud = NULL;
-	if (model->east)
-		mlx_destroy_image(mlx, model->east);
-	model->east = NULL; 
-	if (model->west)
-		mlx_destroy_image(mlx, model->west);
-	model->west = NULL; 
-}
-
 
 void    free_pic(t_game *game)
 {
@@ -77,7 +61,6 @@ void free_game_exit(t_game *game, int exit_code)
 		free_tab(game->map);
 	game->map = NULL;
 	free_sprite_char(&game->sprite);
-	free_model(&game->model, game->mlx);
 	free_pic(game);
 	if (game->win)
 	{

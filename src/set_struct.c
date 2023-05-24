@@ -10,13 +10,7 @@ void set_sprite(t_sprite *sprite)
 	sprite->top = NULL;
 }
 
-void	set_model(t_game *game)
-{
-	game->model.north = NULL;
-	game->model.sud =  NULL;
-	game->model.east = NULL;
-	game->model.west = NULL;
-}
+
 
 void set_game(t_game *game)
 {
@@ -27,5 +21,4 @@ void set_game(t_game *game)
 	game->player.speed = 5;
 	game->player.hitbox = 4;
 	set_sprite(&game->sprite);
-	set_model(game);
 }
