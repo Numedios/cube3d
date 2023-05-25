@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_game.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelabba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: zhamdouc <zhamdouc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:15:07 by sbelabba          #+#    #+#             */
-/*   Updated: 2023/05/24 18:15:10 by sbelabba         ###   ########.fr       */
+/*   Updated: 2023/05/25 14:07:56 by zhamdouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ void	start_game(t_game *game)
 	game->west = new_pic(game, 0, 0, 3);
 	game->south = new_pic(game, 0, 0, 4);
 	free_sprite_char(&game->sprite);
-	game->win = mlx_new_window(game->mlx, game->screen.length, game->screen.height, "Cube3D");
+	game->win = mlx_new_window(game->mlx, game->screen.length,
+			game->screen.height, "Cube3D");
 	window_image_loop(game);
 	mlx_hook(game->win, 2, 1L << 0, &press, game);
 	mlx_hook(game->win, 3, 1L << 1, &release, game);

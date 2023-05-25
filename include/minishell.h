@@ -171,7 +171,7 @@ int			check_dir(char *line, char *dir);
 
 /* create_map.c */
 
-void		create_map(t_game *game, t_map_p map_p);
+void		create_map(t_game *game, t_map_p map_p, int k, int j);
 
 /* create_map-utils.c */
 
@@ -179,19 +179,19 @@ void		set_map_p(t_map_p *map);
 int			start_line_map(t_game *game);
 int			start_height_map(t_game *game, t_map_p	map_p);
 void		check_map_block(t_game *game, t_map_p	map_p);
-int			start_width_map(t_game *game, t_map_p map_p);
+int			start_width_map(t_game *game, t_map_p map_p, int max , int j);
 
 
 /* parsing_map.c */
 
 void		check_map(t_game *game);
 void		parsing_map(t_game *game);
-void		bad_char(t_game *game);
+void		bad_char(t_game *game, int i);
 
 /* parsing_map_utils.c*/
 
 void		check_char_map(t_game *game);
-void		check_wall_line(t_game *game);
+void		check_wall_line(t_game *game, int j);
 void		check_adjacent(int row, int col, t_game *game);
 void		check_wall_map(t_game *game);
 

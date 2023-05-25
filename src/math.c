@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   math.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelabba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: zhamdouc <zhamdouc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:05:21 by sbelabba          #+#    #+#             */
-/*   Updated: 2023/05/24 18:05:22 by sbelabba         ###   ########.fr       */
+/*   Updated: 2023/05/25 14:09:05 by zhamdouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,15 @@ int	check_hit(t_game *game)
 void	check_side(t_game *game)
 {
 	if (game->side == 0)
-		game->wall = (game->mapX - game->x + (1 - game->stepX) / 2) / game->raydirx;
+	{
+		game->wall = (game->mapX - game->x + (1 - game->stepX) / 2)
+			/ game->raydirx;
+	}
 	else
-		game->wall = (game->mapY - game->y + (1 - game->stepY) / 2) / game->raydiry;
+	{
+		game->wall = (game->mapY - game->y + (1 - game->stepY) / 2)
+			/ game->raydiry;
+	}
 	if (game->wall < 0)
 		return ;
 }
@@ -94,7 +100,8 @@ void	put_pic(t_game *game, int i)
 		end = game->screen.height - 1;
 	while (start < end)
 	{
-		game->pic->buf[(game->pic->width * start) + i] = put_texture(game, start, line);
+		game->pic->buf[(game->pic->width * start) + i] = put_texture(game,
+				start, line);
 		start++;
 	}
 }

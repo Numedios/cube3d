@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   move.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelabba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: zhamdouc <zhamdouc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 17:56:09 by sbelabba          #+#    #+#             */
-/*   Updated: 2023/05/24 17:56:10 by sbelabba         ###   ########.fr       */
+/*   Updated: 2023/05/25 14:06:36 by zhamdouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,25 @@
 
 void	camera_left(t_game *game, double oldirx, double oldPlanex)
 {
-	game->player.dirx = game->player.dirx * cos((0.02)) - game->player.diry * sin((0.02));
+	game->player.dirx = game->player.dirx * cos((0.02))
+		- game->player.diry * sin((0.02));
 	game->player.diry = oldirx * sin(0.02) + game->player.diry * cos((0.02));
-	game->player.planex = game->player.planex * cos(0.02) - game->player.planey * sin(0.02);
-	game->player.planey = oldPlanex * sin(0.02) + game->player.planey * cos(0.02);
+	game->player.planex = game->player.planex * cos(0.02)
+		- game->player.planey * sin(0.02);
+	game->player.planey = oldPlanex * sin(0.02)
+		+ game->player.planey * cos(0.02);
 }
 
 void	camera_right(t_game *game, double oldirx, double oldPlanex)
 {
-	game->player.dirx = game->player.dirx * cos(-(0.02)) - game->player.diry * sin(-(0.02));
-	game->player.diry = oldirx * sin(-(0.02)) + game->player.diry * cos(-(0.02));
-	game->player.planex = game->player.planex * cos(-0.02) - game->player.planey * sin(-0.02);
-	game->player.planey = oldPlanex * sin(-0.02) + game->player.planey * cos(-0.02);
+	game->player.dirx = game->player.dirx * cos(-(0.02))
+		- game->player.diry * sin(-(0.02));
+	game->player.diry = oldirx * sin(-(0.02))
+		+ game->player.diry * cos(-(0.02));
+	game->player.planex = game->player.planex * cos(-0.02)
+		- game->player.planey * sin(-0.02);
+	game->player.planey = oldPlanex * sin(-0.02)
+		+ game->player.planey * cos(-0.02);
 }
 
 int	move_control(t_game *game)

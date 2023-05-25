@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_sprites_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelabba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: zhamdouc <zhamdouc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:58:22 by sbelabba          #+#    #+#             */
-/*   Updated: 2023/05/24 18:58:23 by sbelabba         ###   ########.fr       */
+/*   Updated: 2023/05/25 14:05:15 by zhamdouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	check_sprite(char *str, void *mlx)
 	img = NULL;
 	if (str)
 		img = mlx_xpm_file_to_image(mlx, str,
-			&img_width, &img_height);
+				&img_width, &img_height);
 	if (!img)
 	{
 		return (0);
@@ -66,7 +66,8 @@ int	size_path(char *line)
 	int	i;
 
 	i = 0;
-	while (line && line[i] && line[i] != ' ' && line[i] != '\n' && line[i] != '\r')
+	while (line && line[i] && line[i] != ' '
+		&& line[i] != '\n' && line[i] != '\r')
 		i++;
 	return (i);
 }
@@ -76,6 +77,8 @@ int	ft_compstr(char *line, char *cmp)
 	int	i;
 
 	i = 0;
+	if (line && line[0] == '\0')
+		return (1);
 	while (cmp && cmp[i])
 	{
 		if (line && line[i] && line[i] != cmp[i])
@@ -94,7 +97,8 @@ int	check_dir(char *line, char *dir)
 	{
 		while (line && line[i] && line[i] == ' ')
 			i++;
-		if (line && line[i] && line[i] != '\r' && line[i] != '\n' && ft_compstr(line + i, dir))
+		if (line && line[i] && line[i] != '\r'
+			&& line[i] != '\n' && ft_compstr(line + i, dir))
 			return (1);
 		break ;
 	}

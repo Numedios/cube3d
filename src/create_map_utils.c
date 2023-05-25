@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_map_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelabba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: zhamdouc <zhamdouc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:52:55 by sbelabba          #+#    #+#             */
-/*   Updated: 2023/05/24 18:52:56 by sbelabba         ###   ########.fr       */
+/*   Updated: 2023/05/25 13:28:02 by zhamdouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,92 +28,23 @@ int	start_line_map(t_game *game)
 	while (game->tab && game->tab[i])
 	{
 		j = 0;
-		while (game->tab && game->tab[i] && game->tab[i][j] && game->tab[i][j] == ' ')
+		while (game->tab && game->tab[i] && game->tab[i][j]
+			&& game->tab[i][j] == ' ')
 			j++;
-		if (game->tab && game->tab[i] && game->tab[i][j] && game->tab[i][j] == '1')
+		if (game->tab && game->tab[i] && game->tab[i][j]
+			&& game->tab[i][j] == '1')
 			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-int	start_height_map(t_game *game, t_map_p	map_p)
+int	start_width_map(t_game *game, t_map_p map_p, int max, int j)
 {
 	int	i;
-	int	j;
-
-	i = map_p.start;
-	if (i == -1)
-	{
-		printf("Error : start_height");
-		free_game_exit(game, 1);
-	}
-	while (game->tab && game->tab[i])
-	{
-		j = 0;
-		while (game->tab && game->tab[i] && game->tab[i][j] && game->tab[i][j] == ' ')
-			j++;
-		if (game->tab && game->tab[i] && game->tab[i][j] && game->tab[i][j] != '1')
-			return (i - map_p.start);
-		i++;
-	}
-	while (game->tab && game->tab[i])
-	{
-		j = 0;
-		while (game->tab && game->tab[i] && game->tab[i][j] && (game->tab[i][j] == '\r' || game->tab[i][j] == ' '))
-			j++;
-		if (game->tab && game->tab[i] && game->tab[i][j] && (game->tab[i][j] != '\r' && game->tab[i][j] != ' '))
-		{
-			printf("Error :\n%s\nrouver apres la map\n", game->tab[i]);
-			free_game_exit(game, 1);
-		}
-	}
-	return (i - map_p.start);
-}
-
-void	check_map_block(t_game *game, t_map_p	map_p)
-{
-	int	i;
-	int	j;
-
-	i = map_p.start;
-	if (i == -1)
-	{
-		printf("Error : check map block\n");
-		free_game_exit(game, 1);
-	}
-	while (game->tab && game->tab[i])
-	{
-		j = 0;
-		while (game->tab && game->tab[i] && game->tab[i][j] && game->tab[i][j] == ' ')
-			j++;
-		if (game->tab && game->tab[i] && game->tab[i][j] && game->tab[i][j] != '1')
-			break ;
-		i++;
-	}
-	while (game->tab && game->tab[i])
-	{
-		j = 0;
-		while (game->tab && game->tab[i] && game->tab[i][j] && game->tab[i][j] == ' ')
-			j++;
-		if (game->tab && game->tab[i] && game->tab[i][j] && (game->tab[i][j] != ' ' &&  game->tab[i][j] != '\r'))
-		{
-			printf("ERROR :\n%s\nse situe sous la map\n", game->tab[i]);
-			free_game_exit(game, 1);
-		}
-		i++;
-	}
-}
-
-int	start_width_map(t_game *game, t_map_p map_p)
-{
-	int	i;
-	int	j;
 	int	c;
-	int	max;
 
 	i = map_p.start;
-	max = 0;
 	if (i == -1)
 	{
 		printf("Error : start_width map");
@@ -124,7 +55,8 @@ int	start_width_map(t_game *game, t_map_p map_p)
 		j = 0;
 		while (game->tab && game->tab[i] && game->tab[i][j])
 		{
-			if (game->tab[i][j] != ' ' && game->tab[i][j] != '\n' && game->tab[i][j] != '\r')
+			if (game->tab[i][j] != ' ' && game->tab[i][j] != '\n'
+				&& game->tab[i][j] != '\r')
 				c = j;
 			j++;
 		}

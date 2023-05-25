@@ -32,6 +32,6 @@ void	instance_player(t_game *game, int i, int j)
 {
 	game->player.x = i;
 	game->player.y = j;
-	game->player.dir = game->map[j][i];
+	game->player.dir = game->map[i][j];
 	set_dir_start(game);
 }

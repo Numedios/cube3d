@@ -57,8 +57,10 @@ SRC = main.c \
 		set_struct.c \
 		create_sprites_utils.c \
 		create_sprites.c \
+		create_sprites_bis.c \
 		create_map.c \
 		create_map_utils.c \
+		create_map_utils_bis.c \
 		parsing_map.c \
 		parsing_map_utils.c \
 		create_player.c \

@@ -91,6 +91,5 @@ char	**create_tab(char *file)
 		i++;
 	}
 	tab[i] = 0;
-	close(fd);
-	return (tab);
+	return (close(fd), tab);
 }

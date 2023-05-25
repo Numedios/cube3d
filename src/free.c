@@ -64,16 +64,13 @@ void	free_pic(t_game *game)
 	if (game->west && game->west->img)
 	{
 		mlx_destroy_image(game->mlx, game->west->img);
-			free(game->west);
+		free(game->west);
 	}
 	if (game->south && game->south->img)
 	{
 		mlx_destroy_image(game->mlx, game->south->img);
 		free(game->south);
 	}
-
-
-
 }
 
 void	free_game_exit(t_game *game, int exit_code)

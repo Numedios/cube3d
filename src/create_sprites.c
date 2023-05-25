@@ -3,71 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   create_sprites.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelabba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: zhamdouc <zhamdouc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 19:00:58 by sbelabba          #+#    #+#             */
-/*   Updated: 2023/05/24 19:00:59 by sbelabba         ###   ########.fr       */
+/*   Updated: 2023/05/25 13:46:25 by zhamdouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*cut_split_sprite(char *line, t_game *game)
-{
-	int		i;
-	int		size;
-	char	*res;
-
-	i = 0;
-	res = NULL;
-	while (line && *line && *line == ' ')
-		line++;
-	size = size_path(line);
-	res = malloc(sizeof(char) * (size + 1));
-	if (!res)
-		free_game_exit(game, 1);
-	while (i < size && line)
-	{
-		res[i] = line[i];
-		i++;
-	}
-	res[i] = '\0';
-	return (res);
-}
-
-char	*split_sprite(char *line, char *dir, t_game *game)
-{
-	int		i;
-	char	*res;
-
-	i = 0;
-	res = NULL;
-	while (line[i])
-	{
-		while (line && line[i] && line[i] == ' ')
-			i++;
-		if (ft_compstr(line + i, dir))
-			res = cut_split_sprite(line + (i + 2), game);
-		i = i +2;
-		while (line && line[i] && line[i] == ' ')
-			i++;
-		while (line && line[i] && line[i] != ' ' && line[i] != '\r' && line[i] != '\n')
-			i++;
-		while (line && line[i] && line[i] == ' ')
-			i++;
-		if (line && line[i] && line[i] != ' ' && line[i] != '\r' && line[i] != '\n')
-		{
-			printf("ERROR : plusieur chemin pour %s\n", dir);
-			if (res)
-				free(res);
-			free_game_exit(game, 1);
-		}
-		break ;
-	}
-	if (!res)
-		free_game_exit(game, 1);
-	return (res);
-}
 
 int	set_sprite_value(char *tab, char **sprite, char *dir, t_game *game)
 {
@@ -87,6 +30,22 @@ int	set_sprite_value(char *tab, char **sprite, char *dir, t_game *game)
 	return (0);
 }
 
+void	check_color_sprite_2(t_game *game, int *set, int i, char **pos)
+{
+	while (pos && pos[i])
+	{
+		set[i] = ft_atoi(pos[i]);
+		if (set[i] && (set[i] < 0 || set[i] > 255))
+		{
+			printf("Error : couleur %d pqs compris entre 0 et 255", set[i]);
+			if (pos)
+				free_tab(pos);
+			free_game_exit(game, 1);
+		}
+		i++;
+	}
+}
+
 void	check_color_sprite(t_game *game, char *num, int *set)
 {
 	char	**pos;
@@ -102,18 +61,7 @@ void	check_color_sprite(t_game *game, char *num, int *set)
 		printf("Error : \"%s\" plus de 3 couleur (R,G,B)\n", num);
 		free_game_exit(game, 1);
 	}
-	while (pos && pos[i])
-	{
-		set[i] = ft_atoi(pos[i]);
-		if (set[i] && (set[i] < 0 || set[i] > 255))
-		{
-			printf("Error : couleur %d pqs compris entre 0 et 255", set[i]);
-			if (pos)
-				free_tab(pos);
-			free_game_exit(game, 1);
-		}
-		i++;
-	}
+	check_color_sprite_2(game, set, i, pos);
 	if (pos)
 		free_tab(pos);
 }
