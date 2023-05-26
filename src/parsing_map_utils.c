@@ -92,14 +92,14 @@ void	check_adjacent(int row, int col, t_game *game)
 
 void	check_adjacent_4(int row, int col, t_game *game)
 {
-	if (game->map[row] && game->map[row][col + 1]
+	if (game->map[row] && !game->map[row][col + 1]
 		&& comp_char(game->map[row][col + 1], "01EWSN", 6))
 	{
 		printf("ERROR : col + 1 map non fermer \n %s // *%c*\n", game->map[row],
 			game->map[row][col + 1]);
 		free_game_exit(game, 1);
 	}
-	if (col > 0 && game->map[row] && game->map[row][col - 1]
+	if (col > 0 && game->map[row] && !game->map[row][col - 1]
 		&& comp_char(game->map[row][col - 1], "01EWSN", 6))
 	{
 		printf("ERROR : col -1 map non fermer \n %s // *%c*\n", game->map[row],
@@ -112,14 +112,14 @@ void	check_adjacent_3(int row, int col, t_game *game)
 {
 	int	res;
 
-	if (game->map[row + 1] && game->map[row + 1][col]
+	if (game->map[row + 1] && !game->map[row + 1][col]
 		&& comp_char(game->map[row + 1][col], "01EWSN", 6))
 	{
 		printf("ERROR : row + 1 map non fermer \n %s // *%c*\n", game->map[row],
 			game->map[row + 1][col]);
 		free_game_exit(game, 1);
 	}
-	if (row > 0 && game->map[row - 1] && game->map[row - 1][col]
+	if (row > 0 && game->map[row - 1] && !game->map[row - 1][col]
 		&& comp_char(game->map[row - 1][col], "01EWSN", 6))
 	{
 		printf("ERROR : row - 1 map non fermer \n %s // *%c*\n", game->map[row],
