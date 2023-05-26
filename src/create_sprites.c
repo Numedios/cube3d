@@ -30,6 +30,42 @@ int	set_sprite_value(char *tab, char **sprite, char *dir, t_game *game)
 	return (0);
 }
 
+int	ft_isdigit(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str && str[i])
+	{
+		if (!(str[i] >= '0' && str[i] <= '9'))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	check_virgule(t_game *game, char *num)
+{
+	int	i;
+	int	c;
+
+	i = 0;
+	c = 0;
+	while (num && num[i])
+	{
+		if (num && num[i] && num[i] == ',')
+			c++;
+		i++;
+	}
+	if (c != 2)
+	{
+		printf("Error : \"%s\" %d virgule au lieu de 2 \n", num, c);
+		free_game_exit(game, 1);
+	}
+}
+
 void	check_color_sprite_2(t_game *game, int *set, int i, char **pos)
 {
 	while (pos && pos[i])
@@ -37,7 +73,22 @@ void	check_color_sprite_2(t_game *game, int *set, int i, char **pos)
 		set[i] = ft_atoi(pos[i]);
 		if (set[i] && (set[i] < 0 || set[i] > 255))
 		{
-			printf("Error : couleur %d pqs compris entre 0 et 255", set[i]);
+			printf("Error : couleur %d pqs compris entre 0 et 255\n", set[i]);
+			if (pos)
+				free_tab(pos);
+			free_game_exit(game, 1);
+		}
+		i++;
+	}
+}
+
+void	check_color_sprite_3(t_game *game, int *set, int i, char **pos)
+{
+	while (pos && pos[i])
+	{
+		if (ft_isdigit(pos[i]) == 0)
+		{
+			printf("Error : couleur %s n'est pas un nombre\n", pos[i]);
 			if (pos)
 				free_tab(pos);
 			free_game_exit(game, 1);
@@ -49,11 +100,12 @@ void	check_color_sprite_2(t_game *game, int *set, int i, char **pos)
 void	check_color_sprite(t_game *game, char *num, int *set)
 {
 	char	**pos;
-	int		i;
 
-	i = 0;
 	if (num)
+	{
+		check_virgule(game, num);
 		pos = ft_split(num, ',');
+	}
 	if (!pos || ft_strlen_tab(pos) != 3)
 	{
 		if (pos)
@@ -61,7 +113,8 @@ void	check_color_sprite(t_game *game, char *num, int *set)
 		printf("Error : \"%s\" plus de 3 couleur (R,G,B)\n", num);
 		free_game_exit(game, 1);
 	}
-	check_color_sprite_2(game, set, i, pos);
+	check_color_sprite_2(game, set, 0, pos);
+	check_color_sprite_3(game, set, 0, pos);
 	if (pos)
 		free_tab(pos);
 }

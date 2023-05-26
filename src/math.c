@@ -101,7 +101,7 @@ void	put_pic(t_game *game, int i)
 	while (start < end)
 	{
 		game->pic->buf[(game->pic->width * start) + i] = put_texture(game,
-				start, line);
+				start, line, game->south);
 		start++;
 	}
 }

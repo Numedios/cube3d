@@ -191,7 +191,7 @@ void		bad_char(t_game *game, int i);
 /* parsing_map_utils.c*/
 
 void		check_char_map(t_game *game);
-void		check_wall_line(t_game *game, int j);
+void		check_wall_line(t_game *game, int j, int last_line);
 void		check_adjacent(int row, int col, t_game *game);
 void		check_wall_map(t_game *game);
 
@@ -245,7 +245,7 @@ void start_game(t_game *game);
 
 t_pic	*new_pic(t_game *img, int width, int height, int x);
 int			main(int argc, char **argv);
-int	put_texture(t_game *img, float start, int line);
+int	put_texture(t_game *img, float start, int line, t_pic *texture);
 void	get_on_the_floor(t_game *img);
 void set_dir_start(t_game *game);
 void set_screen(t_game *game);

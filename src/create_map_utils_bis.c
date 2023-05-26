@@ -31,17 +31,17 @@ void	start_height_map_2(t_game *game, t_map_p map_p, int *i)
 	}
 }
 
-int only_one_char(char* str, char c)
+int	only_one_char(char *str, char c)
+{
+	if (str == NULL || *str == '\0')
+		return (0);
+	while (*str != '\0' && *str != '\r')
 	{
-    if (str == NULL || *str == '\0') 
-        return 0;
-    while (*str != '\0' && *str != '\r')
-	{
-        if (*str != c) 
-            return 0;
-        str++;
-    }
-    return (1);
+		if (*str != c)
+			return (0);
+		str++;
+	}
+	return (1);
 }
 
 int	start_height_map(t_game *game, t_map_p	map_p)

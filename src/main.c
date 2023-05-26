@@ -41,10 +41,9 @@ t_pic	*new_pic(t_game *img, int width, int height, int x)
 	return (new);
 }
 
-int	put_texture(t_game *img, float start, int line)
+int	put_texture(t_game *img, float start, int line, t_pic *texture)
 {
 	int		color;
-	t_pic	*texture;
 	double	x_text;
 	double	x_wall;
 	double	y_text;
@@ -55,8 +54,6 @@ int	put_texture(t_game *img, float start, int line)
 		texture = img->west;
 	if (img->raydiry < 0 && img->side)
 		texture = img->north;
-	if (img->raydiry > 0 && img->side)
-		texture = img->south;
 	if (img->side == 0)
 		x_wall = img->y + img->wall * img->raydiry;
 	else

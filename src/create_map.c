@@ -23,7 +23,6 @@ void	space_skip(t_game *game, t_map_p map_p, int k, int *j)
 	}
 }
 
-
 void	create_map(t_game *game, t_map_p map_p, int k, int j)
 {
 	int	i;
@@ -32,7 +31,7 @@ void	create_map(t_game *game, t_map_p map_p, int k, int j)
 	game->map = malloc(sizeof(char *) * (map_p.height + 1));
 	if (!game->map)
 		free_game_exit(game, 1);
-	while (i < map_p.start + map_p.height )
+	while (i < map_p.start + map_p.height)
 	{
 		j = 0;
 		game->map[k] = malloc(sizeof(char) * (map_p.max_widht + 1));
@@ -50,5 +49,4 @@ void	create_map(t_game *game, t_map_p map_p, int k, int j)
 		k++;
 	}
 	game->map[k] = 0;
-	print_tab(game->map);
 }
